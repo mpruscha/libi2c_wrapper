@@ -1,0 +1,16 @@
+aclocal.m4
+ar-lib
+autom4te.cache
+autoscan*
+compile
+config.*
+depcomp
+configure
+install-sh
+Makefile
+Makefile.in
+stamp-h1
+missing
+
+.cproject
+.project

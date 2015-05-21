@@ -16,6 +16,8 @@ missing
 
 .cproject
 .project
+.settings
+
 src/.deps
 *.swp
 *.old

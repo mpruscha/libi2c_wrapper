@@ -6,7 +6,10 @@
 
 #include "i2c_wrapper.h"
 
-i2c_wrapper::i2c_wrapper() {
+i2c_wrapper::i2c_wrapper(uint8_t device_address) {
+
+	device = device_address;
+
 }
 
 void i2c_wrapper::initialize() {
@@ -71,37 +74,99 @@ void i2c_wrapper::enable(bool isEnabled) {
 //    }
 //    return count;
 //}
-//
-//
-//int8_t i2c_wrapper::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout) {
-//    return readBytes(devAddr, regAddr, 1, data, timeout);
-//}
-//
-//int8_t i2c_wrapper::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout) {
-//
-//  I2C_TransferSeq_TypeDef seq;
-//
-//  uint8_t regid[1];
-//
-//  seq.addr = devAddr << 1;
-//  seq.flags = I2C_FLAG_WRITE_READ;
-//
-//  /* Select register to be read */
-//  regid[0] = regAddr;
-//  seq.buf[0].data = regid;
-//  seq.buf[0].len = 1;
-//
-//  /* 1 bytes reg */
-//  seq.buf[1].data = data;
-//  seq.buf[1].len = length;
-//
-//  if (transfer(&seq, timeout) == i2cTransferDone) {
-//	  return seq.buf[1].len;
-//  } else {
-//	  return false;
-//  }
-//
-//}
+
+
+int8_t i2c_wrapper::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout) {
+    return readBytes(devAddr, regAddr, 1, data, timeout);
+}
+
+int8_t i2c_wrapper::readBytes(uint8_t slave_address, uint8_t reg_addr, uint8_t length, uint8_t *data, uint16_t timeout) {
+
+
+	uint8_t slave_address_7bit = slave_address << 1;
+
+	this->sendStart();
+	this->sendSlaveAddress(slave_address_7bit);
+
+	/* register to read from */
+	this->sendData(reg_addr);
+
+	this->sendStart();
+	this->sendSlaveAddress(slave_address_7bit);
+
+	uint8_t byte_read = (uint8_t)(I2C_DR(this->device) << 8); /* MSB */
+
+	/* end transmission with sending stop bit */
+	i2c_wrapper::nAck();
+
+	i2c_send_stop(device);
+
+	return byte_read;
+
+}
+
+int8_t i2c_wrapper::nAck()
+{
+	I2C_CR1(device) &= ~I2C_CR1_ACK;
+
+	return 0;
+}
+
+int8_t i2c_wrapper::sendData(uint8_t data)
+{
+
+	i2c_send_data(I2C1, data); /* temperature register */
+
+	while (!(I2C_SR1(I2C1) & (I2C_SR1_BTF | I2C_SR1_TxE)));
+
+	return 0;
+}
+
+
+int8_t i2c_wrapper::sendStart()
+{
+	i2c_send_start(device);
+
+	/* Waiting for START is send and switched to master mode. */
+	while (!((I2C_SR1(device) & I2C_SR1_SB)
+		& (I2C_SR2(device) & (I2C_SR2_MSL | I2C_SR2_BUSY))));
+
+	return 0;
+
+}
+
+int8_t i2c_wrapper::sendSlaveAddress(uint8_t devAddr)
+{
+
+	i2c_send_7bit_address(I2C1, devAddr, I2C_WRITE);
+
+	/* Waiting for address is transferred. */
+	while (!(I2C_SR1(I2C1) & I2C_SR1_ADDR));
+
+//	Is this needed?
+//	I2C_SR2(I2C1);
+
+	return 0;
+
+}
+
+// sets i2c device, on STM32/libopencm3 e.g. I2C1
+int8_t i2c_wrapper::setDevice(uint8_t device_address)
+{
+
+	device = device_address;
+
+	return 0;
+}
+
+// gets i2c device, on STM32/libopencm3 e.g. I2C1
+int8_t i2c_wrapper::getDevice()
+{
+	return device;
+}
+
+
+
 //
 //
 //bool i2c_wrapper::writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data) {

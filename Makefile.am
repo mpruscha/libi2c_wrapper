@@ -23,6 +23,6 @@ AM_CPPFLAGS = -I../include $(CXXFLAGS)
 
 lib_LIBRARIES = libi2c_wrapper.a
 
-#libi2c_wrapper_a_CPPFLAGS = $(CFLAGS)
+include_HEADERS = ../include/i2c_wrapper.h
 
 libi2c_wrapper_a_SOURCES = ../src/i2c_wrapper.cpp

@@ -107,7 +107,7 @@ uint8_t I2CManager::sendData(uint8_t data)
 
 	i2c_send_data(I2C1, data); /* temperature register */
 
-	while (!(I2C_SR1(I2C1) & I2C_SR1_TxE));
+	waitWrite();
 
 	return 0;
 }

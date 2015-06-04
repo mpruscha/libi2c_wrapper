@@ -1,6 +1,6 @@
 
 AC_PREREQ([2.69])
-AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_INIT([I2CManager], [0.1], [])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
@@ -9,11 +9,11 @@ AC_CONFIG_HEADERS([config.h])
 
 MACHINE="-DSTM32F4"
 
-CXXFLAGS="$CXXFLAGS -I/usr/local/arm-none-eabi/include -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 $MACHINE -nostdlib"
+CXXFLAGS="$CXXFLAGS -I/usr/local/arm-none-eabi/include -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g $MACHINE -nostdlib -fno-exceptions -fno-rtti "
 
-CFLAGS="$CFLAGS -I/usr/local/arm-none-eabi/include -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 $MACHINE -nostdlib"
+CFLAGS="$CFLAGS -I/usr/local/arm-none-eabi/include -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -g  $MACHINE -nostdlib"
 
-LDFLAGS="$LDFLAGS -L/usr/local/arm-none-eabi/lib/ -mfloat-abi=hard -Wl,--gc-sections"
+LDFLAGS="$LDFLAGS -L/usr/local/arm-none-eabi/lib/ -mfloat-abi=hard -nostdlib -Wl,--gc-sections"
 
 
 

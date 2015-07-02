@@ -17,6 +17,9 @@ class I2CManager {
 
     private:
 
+        void readByte(uint8_t* byte_read);
+
+
         uint8_t sendStart();
         uint8_t sendSlaveAddress(uint8_t devAddr, uint8_t read_write);
         uint8_t getDevice();

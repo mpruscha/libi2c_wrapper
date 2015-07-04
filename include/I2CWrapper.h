@@ -1,10 +1,10 @@
 
 #include <stdint.h>
 
-class I2CManager {
+class I2CWrapper {
 
     public:
-		I2CManager(uint8_t device_address);
+		I2CWrapper(uint8_t device_address);
 
 		uint8_t device;
 

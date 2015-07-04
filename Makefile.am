@@ -3,8 +3,8 @@ AUTOMAKE_OPTIONS  = subdir-objects
 
 AM_CPPFLAGS = -I../include # $(CXXFLAGS)
 
-lib_LIBRARIES = libI2CManager.a
+lib_LIBRARIES = libI2CWrapper.a
 
-include_HEADERS = ../include/I2CManager.h
+include_HEADERS = ../include/I2CWrapper.h
 
-libI2CManager_a_SOURCES = ../src/I2CManager.cpp
+libI2CWrapper_a_SOURCES = ../src/I2CWrapper.cpp
